@@ -45,6 +45,7 @@
 /* Example/Board Header files */
 #include "Board.h"
 #include "i2c_configuration.h"
+#include "i2c_bus.h"
 
 #define TASKSTACKSIZE       640
 
@@ -59,6 +60,10 @@ static Display_Handle display;
 void *mainThread(void *arg0)
 {
     I2CConfiguration i2c_config(I2CConfiguration::BLOCKING_MODE, I2CConfiguration::RATE_400_KHZ);
+
+    I2CBus i2c_bus(i2c_config, Board_I2C_TMP);
+
+    i2c_bus.open();
 
     unsigned int    i;
     uint16_t        temperature;

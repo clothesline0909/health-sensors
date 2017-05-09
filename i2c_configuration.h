@@ -48,6 +48,16 @@ public:
   */
   I2CConfiguration(int transfer_mode, int bit_rate);
 
+  /**
+    Function that returns the transfer mode.
+  */
+  int get_transfer_mode(void);
+
+  /**
+    Function that returns the bit rate.
+  */
+  int get_bit_rate(void);
+
 /**
   Private members of the I2CConfiguration class.
 */
