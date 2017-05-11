@@ -11,6 +11,7 @@
 #define _I2C_BUS_H_
 
 #include "i2c_configuration.h"
+#include "ti/drivers/I2C.h"
 
 /**
   I2CBus class.
@@ -38,6 +39,18 @@ public:
   */
   void open(void);
 
+  /**
+    Function that closes the I2C bus.
+  */
+  void close(void);
+
+  /**
+    Function that returns a handle to the open I2C bus. Must be called after the I2C_Bus::open method.
+
+    @return The I2C_Handle.
+  */
+  I2C_Handle get_handle(void);
+
 /**
   Private members of the I2CBus class.
 */
@@ -56,6 +69,11 @@ private:
     The index of the IC bus on the board.
   */
   int index;
+
+  /**
+    The handle to the open I2C bus.
+  */
+  I2C_Handle handle;
 };
 
 #endif // _I2C_BUS_H_

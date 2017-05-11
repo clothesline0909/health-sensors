@@ -46,100 +46,33 @@
 #include "Board.h"
 #include "i2c_configuration.h"
 #include "i2c_bus.h"
+#include "sensors.h"
 
 #define TASKSTACKSIZE       640
-
-#define TMP007_DIE_TEMP     0x0001  /* Die Temp Result Register */
-#define TMP007_OBJ_TEMP     0x0003  /* Object Temp Result Register */
-
-static Display_Handle display;
 
 /*
  *  ======== mainThread ========
  */
 void *mainThread(void *arg0)
 {
+    double STEFAN_BOLTZMANN_CONST = 5.7e-12;
+    double emissivity = 0.95;
+
+    double constant = STEFAN_BOLTZMANN_CONST * emissivity;
+
+    I2C_init();
+
     I2CConfiguration i2c_config(I2CConfiguration::BLOCKING_MODE, I2CConfiguration::RATE_400_KHZ);
 
     I2CBus i2c_bus(i2c_config, Board_I2C_TMP);
 
     i2c_bus.open();
 
-    unsigned int    i;
-    uint16_t        temperature;
-    uint8_t         txBuffer[1];
-    uint8_t         rxBuffer[2];
-    I2C_Handle      i2c;
-    I2C_Params      i2cParams;
-    I2C_Transaction i2cTransaction;
+    TMP006 tmp006(i2c_bus, 0x40, constant);
 
-    /* Call driver init functions */
-    Display_init();
-    GPIO_init();
-    I2C_init();
+    uint16_t reading = tmp006.get_reading();
 
-    /* Open the HOST display for output */
-    display = Display_open(Display_Type_UART, NULL);
-    if (display == NULL) {
-        while (1);
-    }
-
-    /* Turn on user LED */
-    GPIO_write(Board_GPIO_LED0, Board_GPIO_LED_ON);
-    Display_printf(display, 0, 0, "Starting the i2ctmp007 example\n");
-
-    /* Create I2C for usage */
-    I2C_Params_init(&i2cParams);
-    i2cParams.bitRate = I2C_400kHz;
-    i2c = I2C_open(Board_I2C_TMP, &i2cParams);
-    if (i2c == NULL) {
-        Display_printf(display, 0, 0, "Error Initializing I2C\n");
-        while (1);
-    }
-    else {
-        Display_printf(display, 0, 0, "I2C Initialized!\n");
-    }
-
-    /* Point to the T ambient register and read its 2 bytes */
-    txBuffer[0] = TMP007_OBJ_TEMP;
-    i2cTransaction.slaveAddress = Board_TMP_ADDR;
-    i2cTransaction.writeBuf = txBuffer;
-    i2cTransaction.writeCount = 1;
-    i2cTransaction.readBuf = rxBuffer;
-    i2cTransaction.readCount = 2;
-
-    /* Take 20 samples and print them out onto the console */
-    for (i = 0; i < 20; i++) {
-        if (I2C_transfer(i2c, &i2cTransaction)) {
-            /* Extract degrees C from the received data; see TMP102 datasheet */
-            temperature = (rxBuffer[0] << 6) | (rxBuffer[1] >> 2);
-
-            /*
-             * If the MSB is set '1', then we have a 2's complement
-             * negative value which needs to be sign extended
-             */
-            if (rxBuffer[0] & 0x80) {
-                temperature |= 0xF000;
-            }
-           /*
-            * For simplicity, divide the temperature value by 32 to get rid of
-            * the decimal precision; see TI's TMP007 datasheet
-            */
-            temperature /= 32;
-
-            Display_printf(display, 0, 0, "Sample %u: %d (C)\n", i, temperature);
-        }
-        else {
-            Display_printf(display, 0, 0, "I2C Bus fault\n");
-        }
-
-        /* Sleep for 1 second */
-        sleep(1);
-    }
-
-    /* Deinitialized I2C */
-    I2C_close(i2c);
-    Display_printf(display, 0, 0, "I2C closed!\n");
+    i2c_bus.close();
 
     return (NULL);
 }
