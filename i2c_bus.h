@@ -32,7 +32,7 @@ public:
     @param index The index of the I2C bus on the board.
     @return The I2CBus object.
   */
-  I2CBus(I2CConfiguration config, int index);
+  I2CBus(I2CConfiguration* config, int index);
 
   /**
     Function that opens the I2C bus.
@@ -63,7 +63,7 @@ private:
   /**
     The I2C configuration for the bus.
   */
-  I2CConfiguration config;
+  I2CConfiguration *config;
 
   /**
     The index of the IC bus on the board.

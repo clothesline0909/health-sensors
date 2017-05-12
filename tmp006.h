@@ -36,7 +36,7 @@ public:
     @param constant The calibration constant for the sensor.
     @return The TMP006 object.
   */
-  TMP006(I2CBus bus, int address, double constant);
+  TMP006(I2CBus* bus, int address, double constant);
 
   /**
     Method that returns the TMP006 reading. 

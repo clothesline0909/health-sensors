@@ -31,14 +31,14 @@ public:
     @param address The address of the sensor.
     @return The I2CSensor object.
   */
-  I2CSensor(I2CBus bus, int address);
+  I2CSensor(I2CBus* bus, int address);
 
   /**
-    Method that returns the sensor bus.
+    Method that returns a reference to the sensor bus.
 
-    @return The sensor bus.
+    @return A reference to the sensor bus.
   */
-  I2CBus get_bus(void);
+  I2CBus *get_bus(void);
 
   /**
     Method that returns the sensor address.
@@ -68,9 +68,9 @@ private:
   */
 
   /**
-    The bus that the sensor is connected to.
+    A reference to the bus that the sensor is connected to.
   */
-  I2CBus bus;
+  I2CBus* bus;
 
   /**
     The address of the sensor.

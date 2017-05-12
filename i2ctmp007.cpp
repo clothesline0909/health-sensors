@@ -64,11 +64,11 @@ void *mainThread(void *arg0)
 
     I2CConfiguration i2c_config(I2CConfiguration::BLOCKING_MODE, I2CConfiguration::RATE_400_KHZ);
 
-    I2CBus i2c_bus(i2c_config, Board_I2C_TMP);
+    I2CBus i2c_bus(&i2c_config, Board_I2C_TMP);
 
     i2c_bus.open();
 
-    TMP006 tmp006(i2c_bus, 0x40, constant);
+    TMP006 tmp006(&i2c_bus, 0x40, constant);
 
     uint16_t reading = tmp006.get_reading();
 

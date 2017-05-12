@@ -7,11 +7,11 @@ using namespace std;
   Public methods of the I2CBus class.
 */
 
-I2CBus::I2CBus(I2CConfiguration config, int index) : config(config), index(index) {}
+I2CBus::I2CBus(I2CConfiguration* config, int index) : config(config), index(index) {}
 
 void I2CBus::open() {
-  int transfer_mode = this->config.get_transfer_mode();
-  int bit_rate = this->config.get_bit_rate();
+  int transfer_mode = this->config->get_transfer_mode();
+  int bit_rate = this->config->get_bit_rate();
 
   // Create the I2C_Params object for compatibility.
   I2C_Params i2c_params = {

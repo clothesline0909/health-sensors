@@ -16,7 +16,7 @@ static const int CONFIG_REGISTER = 0x02;
   Public methods of the TMP006 class.
 */
 
-TMP006::TMP006(I2CBus bus, int address, double constant) : I2CSensor(bus, address), constant(constant) {}
+TMP006::TMP006(I2CBus* bus, int address, double constant) : I2CSensor(bus, address), constant(constant) {}
 
 double TMP006::get_reading(void) {
   //double sensor_voltage = get_sensor_voltage();
@@ -49,7 +49,7 @@ double TMP006::get_die_temperature(void) {
   i2c_transaction.readBuf = rxBuffer;
   i2c_transaction.readCount = 2;
 
-  I2C_Handle handle = this->get_bus().get_handle();
+  I2C_Handle handle = this->get_bus()->get_handle();
 
   I2C_transfer(handle, &i2c_transaction);
 
