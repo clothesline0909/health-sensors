@@ -98,7 +98,7 @@ private:
   double get_die_temperature(void);
 
   /**
-    Method that converts the sensor and die temperatures into an on object temperature.
+    Method that converts the sensor and die temperatures into an object temperature.
 
     @param sensor_voltage The voltage reading from the sensor.
     @param die_temperature The temperature of the die.
