@@ -66,11 +66,6 @@ private:
   static const int DIE_TEMP_REGISTER;
 
   /**
-    The register used to configure the TMP006 sensor.
-  */
-  static const int CONFIG_REGISTER;
-
-  /**
     Member variables of the TMP006 class.
   */
 

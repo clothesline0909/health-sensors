@@ -8,9 +8,8 @@ using namespace std;
   Constants of the TMP006 class.
 */
 
-static const int SENSOR_VOLTAGE_REGISTER = 0x00;
-static const int DIE_TEMP_REGISTER = 0x01;
-static const int CONFIG_REGISTER = 0x02;
+const int TMP006::SENSOR_VOLTAGE_REGISTER = 0x00;
+const int TMP006::DIE_TEMP_REGISTER = 0x01;
 
 /**
   Public methods of the TMP006 class.
@@ -42,7 +41,7 @@ double TMP006::get_die_temperature(void) {
 
   // Create I2C Transaction.
   I2C_Transaction i2c_transaction;
-  txBuffer[0] = 0x01;
+  txBuffer[0] = TMP006::DIE_TEMP_REGISTER;
   i2c_transaction.slaveAddress = this->get_address();
   i2c_transaction.writeBuf = txBuffer;
   i2c_transaction.writeCount = 1;
@@ -59,6 +58,8 @@ double TMP006::get_die_temperature(void) {
 
   return temperature;
 }
+
+
 
 double TMP006::get_object_temperature(double sensor_voltage, double die_temperature) {
   double object_temp_power_4 = pow(die_temperature, 4) + (sensor_voltage / this->constant);
