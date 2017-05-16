@@ -11,5 +11,6 @@
 #define _SENSORS_H_
 
 #include "tmp006.h"
+#include "mcp9808.h"
 
 #endif // _SENSORS_H_
