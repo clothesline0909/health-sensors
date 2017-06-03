@@ -5,25 +5,19 @@ const int MCP9808::TEMP_REGISTER = 0x05;
 MCP9808::MCP9808(I2CBus* bus, int address, double constant) : I2CSensor(bus, address), constant(constant) {}
 
 double MCP9808::get_reading() {
-  uint8_t         txBuffer[1];
-  uint8_t         rxBuffer[2];
+  uint8_t  read_buffer[2];
+  uint8_t  write_buffer[1];
 
-  // Create I2C Transaction.
-  I2C_Transaction i2c_transaction;
-  txBuffer[0] = MCP9808::TEMP_REGISTER;
-  i2c_transaction.slaveAddress = this->get_address();
-  i2c_transaction.writeBuf = txBuffer;
-  i2c_transaction.writeCount = 1;
-  i2c_transaction.readBuf = rxBuffer;
-  i2c_transaction.readCount = 2;
+  // Tell the MCP9808 to read from the temperature register.
+  write_buffer[0] = MCP9808::TEMP_REGISTER;
 
-  I2C_Handle handle = this->get_bus()->get_handle();
+  // Perform I2C transaction.
+  this->get_bus()->perform_transaction(this->get_address(), read_buffer, 2, write_buffer, 1);
 
-  I2C_transfer(handle, &i2c_transaction);
+  // Perform the necessary bit-shifting on the read buffer.
+  double temperature = ((read_buffer[0] & ~(7 << 5)) << 8) | (read_buffer[1]);
 
-  double temperature = ((rxBuffer[0] & ~(7 << 5)) << 8) | (rxBuffer[1]);
-
-  temperature /= 16;
+  temperature /= 16.0;
 
   return temperature;
 }

@@ -36,23 +36,17 @@ double TMP006::get_sensor_voltage(void) {
 }
 
 double TMP006::get_die_temperature(void) {
-  uint8_t         txBuffer[1];
-  uint8_t         rxBuffer[2];
+  uint8_t  read_buffer[2];
+  uint8_t  write_buffer[1];
 
-  // Create I2C Transaction.
-  I2C_Transaction i2c_transaction;
-  txBuffer[0] = TMP006::DIE_TEMP_REGISTER;
-  i2c_transaction.slaveAddress = this->get_address();
-  i2c_transaction.writeBuf = txBuffer;
-  i2c_transaction.writeCount = 1;
-  i2c_transaction.readBuf = rxBuffer;
-  i2c_transaction.readCount = 2;
+  // Tell the TMP006 to read from the die temperature register.
+  write_buffer[0] = TMP006::DIE_TEMP_REGISTER;
 
-  I2C_Handle handle = this->get_bus()->get_handle();
+  // Perform I2C transaction.
+  this->get_bus()->perform_transaction(this->get_address(), read_buffer, 2, write_buffer, 1);
 
-  I2C_transfer(handle, &i2c_transaction);
-
-  double temperature = (rxBuffer[0] << 6) | (rxBuffer[1] >> 2);
+  // Perform necessary bitshifting on read buffer.
+  double temperature = (read_buffer[0] << 6) | (read_buffer[1] >> 2);
 
   temperature /= 32.0;
 

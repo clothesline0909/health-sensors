@@ -51,6 +51,17 @@ public:
   */
   I2C_Handle get_handle(void);
 
+  /**
+     Function that performs an I2C Transaction and writes any response data to the read buffer.
+
+     @param address The address of the I2C device on the bus.
+     @param read_buffer The buffer to which the I2C device will write.
+     @param read_buffer_length The length of the read buffer.
+     @param write_buffer The buffer which will be used to perform the initial write to the I2C device.
+     @param write_buffer_length The length of the write buffer.
+   */
+  void perform_transaction(int address, uint8_t* read_buffer, int read_buffer_length, uint8_t* write_buffer, int write_buffer_length);
+
 /**
   Private members of the I2CBus class.
 */
