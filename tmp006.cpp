@@ -54,7 +54,7 @@ double TMP006::get_die_temperature(void) {
 
   double temperature = (rxBuffer[0] << 6) | (rxBuffer[1] >> 2);
 
-  temperature /= 32;
+  temperature /= 32.0;
 
   return temperature;
 }

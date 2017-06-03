@@ -72,9 +72,9 @@ void *mainThread(void *arg0)
 
     MCP9808 mcp9808(&i2c_bus, 0x18, constant);
 
-    uint16_t reading = tmp006.get_reading();
+    double reading = tmp006.get_reading();
 
-    uint16_t reading2 = mcp9808.get_reading();
+    double reading2 = mcp9808.get_reading();
 
     i2c_bus.close();
 
