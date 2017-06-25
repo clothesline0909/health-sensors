@@ -61,8 +61,9 @@ public:
      @param write_buffer_length The length of the write buffer.
    */
   void perform_transaction(int address, uint8_t* read_buffer, int read_buffer_length, uint8_t* write_buffer, int write_buffer_length);
-
-/**
+  void perform_write_transaction(int address, uint8_t* write_buffer, int write_buffer_length);
+  void perform_read_transaction(int address, uint8_t* read_buffer, int read_buffer_length);
+  /**
   Private members of the I2CBus class.
 */
 private:
