@@ -33,10 +33,9 @@ public:
 
     @param bus The bus that the sensor is connected to.
     @param address The address of the sensor.
-    @param constant The calibration constant for the sensor.
     @return The MCP9808 object.
   */
-  MCP9808(I2CBus* bus, int address, double constant);
+  MCP9808(I2CBus* bus, int address);
 
   /**
     Method that returns the MCP9808 reading.
@@ -63,11 +62,6 @@ private:
   /**
     Member variables of the MCP9808 class.
   */
-
-  /**
-    The calibration constant of the I2CSensor.
-  */
-  double constant;
 
   /**
     Member functions of the MCP9808 class.
