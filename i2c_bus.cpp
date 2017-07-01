@@ -34,8 +34,9 @@ I2C_Handle I2CBus::get_handle() {
   return this->handle;
 }
 
-void I2CBus::perform_transaction(int address, uint8_t* read_buffer, int read_buffer_length, uint8_t* write_buffer, int write_buffer_length) {
+bool I2CBus::perform_transaction(int address, uint8_t* read_buffer, int read_buffer_length, uint8_t* write_buffer, int write_buffer_length) {
   I2C_Transaction i2c_transaction;
+  bool success;
 
   // Write the buffers and lengths.
   i2c_transaction.slaveAddress = address;
@@ -47,37 +48,23 @@ void I2CBus::perform_transaction(int address, uint8_t* read_buffer, int read_buf
   I2C_Handle handle = this->get_handle();
 
   // Perform I2C transfer.
-  I2C_transfer(handle, &i2c_transaction);
+  success = I2C_transfer(handle, &i2c_transaction);
+
+  // Handle the I2C error.
+  if (!success) {
+  }
+
+  return success;
 }
 
-void I2CBus::perform_write_transaction(int address, uint8_t* write_buffer, int write_buffer_length) {
-  I2C_Transaction i2c_transaction;
+bool I2CBus::perform_write_transaction(int address, uint8_t* write_buffer, int write_buffer_length) {
 
-  // Write the buffers and lengths.
-  i2c_transaction.slaveAddress = address;
-  i2c_transaction.writeBuf = write_buffer;
-  i2c_transaction.writeCount = write_buffer_length;
-  i2c_transaction.readBuf = NULL;
-  i2c_transaction.readCount = 0;
-
-  I2C_Handle handle = this->get_handle();
-
-  // Perform I2C transfer.
-  I2C_transfer(handle, &i2c_transaction);
+  // Perform the transaction.
+  return this->perform_transaction(address, NULL, 0, write_buffer, write_buffer_length);
 }
 
-void I2CBus::perform_read_transaction(int address, uint8_t* read_buffer, int read_buffer_length) {
-  I2C_Transaction i2c_transaction;
+bool I2CBus::perform_read_transaction(int address, uint8_t* read_buffer, int read_buffer_length) {
 
-  // Write the buffers and lengths.
-  i2c_transaction.slaveAddress = address;
-  i2c_transaction.writeBuf = NULL;
-  i2c_transaction.writeCount = 0;
-  i2c_transaction.readBuf = read_buffer;
-  i2c_transaction.readCount = read_buffer_length;
-
-  I2C_Handle handle = this->get_handle();
-
-  // Perform I2C transfer.
-  I2C_transfer(handle, &i2c_transaction);
+  // Perform the transaction.
+  return this->perform_transaction(address, read_buffer, read_buffer_length, NULL, 0);
 }
